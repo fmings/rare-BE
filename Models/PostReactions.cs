@@ -9,8 +9,8 @@ namespace rare_BE.Models
     public class PostReactions
     {
         public int Id { get; set; }
-        public int reaction_id { get; set; }
-        public int user_id { get; set; }
-        public int post_id { get; set; }
+        public int Reaction_Id { get; set; }
+        public int User_Id { get; set; }
+        public int Post_Id { get; set; }
     }
 }
