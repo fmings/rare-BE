@@ -10,7 +10,7 @@ namespace rare_BE.Models
     {
         public int Id { get; set; }
         public int Reaction_Id { get; set; }
-        public int User_Id { get; set; }
-        public int Post_Id { get; set; }
+        public int UserId { get; set; }
+        public int PostId { get; set; }
     }
 }
