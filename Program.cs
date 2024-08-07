@@ -431,6 +431,8 @@ app.MapGet("/users/{id}/posts/{postId}", (int id, int postId) =>
 
     List<Posts> usersPost = posts.Where(p => p.UserId == userId?.Id && p.Id == postId).ToList();
 
+    usersPost.ForEach(uP => uP.Category = categories.FirstOrDefault(c => c.Id == uP.CategoryId));
+
     // Error handling for if the either the id or postId is 0 or null and if id or postId doesn't exist
     if (postId == 0 || id == 0 || id != userId?.Id || !posts.Any(p => p.Id == postId))
     {
