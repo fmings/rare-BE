@@ -172,7 +172,6 @@ List<Posts> posts = new List<Posts>()
     },
 };
 
-
 List<Comments> comments = new List<Comments>()
 {
     new Comments()
@@ -195,6 +194,99 @@ List<Comments> comments = new List<Comments>()
         AuthorId = 4,
         PostId = 4,
         Content = "21!!!!!!!!!!!!! Cheers!",
+    }
+};
+
+List<Users> users = new List<Users>()
+{
+    new Users()
+    {
+        Id = 1,
+        FirstName = "Britnay",
+        LastName = "Gore",
+        Email = "britnayg@gmail.com",
+        Bio = "The Island Gyal",
+        Username = "brit268",
+        Password = "Glue2Yu",
+        CreatedOn = new DateTime(2022, 10, 6),
+    },
+    new Users()
+    {
+        Id = 2,
+        FirstName = "Felicia",
+        LastName = "Mings",
+        Email = "feliciam@gmail.com",
+        Bio = "Team Vibes",
+        Username = "felicia808",
+        Password = "CatB3dPoop",
+        CreatedOn = new DateTime(2023, 5, 9),
+    },
+    new Users()
+    {
+        Id = 3,
+        FirstName = "Fletcher",
+        LastName = "Moore",
+        Email = "fletcherm@gmail.com",
+        Bio = "The Young Manager",
+        Username = "fletch777",
+        Password = "Sl1ckRic",
+        CreatedOn = new DateTime(2023, 12, 12),
+    },
+    new Users()
+    {
+        Id = 4,
+        FirstName = "Zach",
+        LastName = "Colbrn",
+        Email = "zachm@gmail.com",
+        Bio = "The Alcohol King",
+        Username = "zach329",
+        Password = "Teki11ya",
+        CreatedOn = new DateTime(2022, 1, 30),
+    },
+    new Users()
+    {
+        Id = 5,
+        FirstName = "Odi",
+        LastName = "Joseph",
+        Email = "odij@gmail.com",
+        Bio = "Backend Genius",
+        Username = "odi904",
+        Password = "Fr0King",
+        CreatedOn = new DateTime(2024, 4, 13),
+    },
+};
+
+List<Subscriptions> subscriptions = new List<Subscriptions>()
+{
+    new Subscriptions()
+    {
+        Id = 1,
+        FollowerId = 5,
+        AuthorId = 3,
+    },
+    new Subscriptions()
+    {
+        Id = 2,
+        FollowerId = 4,
+        AuthorId = 1,
+    },
+    new Subscriptions()
+    {
+        Id = 3,
+        FollowerId = 2,
+        AuthorId = 4,
+    },
+    new Subscriptions()
+    {
+        Id = 4,
+        FollowerId = 1,
+        AuthorId = 2,
+    },
+    new Subscriptions()
+    {
+        Id = 5,
+        FollowerId = 3,
+        AuthorId = 5,
     }
 };
 
