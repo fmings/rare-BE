@@ -290,10 +290,15 @@ app.MapGet("/users/{id}/", (int id) =>
 // GET Posts by Category
 app.MapGet("/categories/{id}/posts", (int id) =>
 {
-    Categories categoriesId = categories.FirstOrDefault(c => c.Id == id);
+    Categories? categoriesId = categories.FirstOrDefault(c => c.Id == id);
 
-    List<Posts> categoryPosts = posts.Where(p => p.CategoryId == categoriesId.Id).ToList();
-    return categoryPosts;
+    List<Posts> categoryPosts = posts.Where(p => p.CategoryId == categoriesId?.Id).ToList();
+
+    if (categoriesId == null || categoriesId?.Id == null || id != categoriesId.Id)
+    {
+        return id != categoriesId?.Id ? Results.BadRequest() : Results.NotFound();
+    }
+    return Results.Ok(categoryPosts);
 
 });
 
