@@ -244,8 +244,25 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Where APIs should begin
-app.MapGet("/test", () =>
+app.MapGet("/posts", () =>
 {
-    return "sugar";
+    return posts;
 });
+
+// PUT Post
+app.MapPut("/posts/{id}", (int id, Posts post) =>
+{
+    Posts postToUpdate = posts.FirstOrDefault(p => p.Id == id);
+
+    int postIndex = posts.IndexOf(postToUpdate);
+    if (postToUpdate == null || id != post.Id)
+    {
+        // If the id is not the id in post data, it returns bad request (400) but if it could not find an post with the id given, it returns not found (404)
+        return id != post.Id ? Results.BadRequest() : Results.NotFound();
+    }
+    posts[postIndex] = post;
+    return Results.Ok();
+});
+
+
 app.Run();
