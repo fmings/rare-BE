@@ -220,6 +220,35 @@ List<PostTags> postTags = new List<PostTags>()
         TagId = 1
     }
 };
+
+List<Reactions> reactions = new List<Reactions>()
+{
+    new Reactions()
+    {
+        Id = 1,
+        Emoji = true
+    },
+    new Reactions()
+    {
+        Id = 2,
+        Emoji = false
+    },
+    new Reactions()
+    {
+        Id = 3,
+        Emoji = true
+    },
+    new Reactions()
+    {
+        Id = 4,
+        Emoji = false
+    },
+    new Reactions()
+    {
+        Id = 5,
+        Emoji = true
+    },
+};
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
