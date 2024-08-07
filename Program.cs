@@ -323,6 +323,7 @@ List<PostTags> postTags = new List<PostTags>()
         TagId = 1
     }
 };
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -350,7 +351,7 @@ app.UseHttpsRedirection();
 app.MapGet("/posts", () =>
 {
     posts.ForEach(p => p.Category = categories.FirstOrDefault(c => c.Id == p.CategoryId));
-    // posts.ForEach(p => p.User = users.FirstOrDefault(u => u.Id == p.CategoryId));
+    posts.ForEach(p => p.User = users.FirstOrDefault(u => u.Id == p.CategoryId));
     return posts;
 });
 
@@ -370,11 +371,11 @@ app.MapPut("/posts/{id}", (int id, Posts post) =>
 });
 
 // GET Post Details
-app.MapGet("/users/{id}/", (int id) =>
+app.MapGet("/posts/{id}", (int id) =>
 {
     Posts post = posts.FirstOrDefault(p => p.Id == id);
     post.Category = categories.FirstOrDefault(c => c.Id == post.CategoryId);
-    //post.User = users.FirstOrDefault(u => u.Id == post.UserId);
+    post.User = users.FirstOrDefault(u => u.Id == post.UserId);
 
     return post == null ? Results.NotFound() : Results.Ok(post);
 });
@@ -392,6 +393,22 @@ app.MapGet("/categories/{id}/posts", (int id) =>
     }
     return Results.Ok(categoryPosts);
 
+});
+
+// GET Posts by Author/User
+app.MapGet("/users/{id}/posts/{postId}", (int id, int postId) =>
+{
+    Users? userId = users.FirstOrDefault(p => p.Id == id);
+
+    List<Posts> usersPost = posts.Where(p => p.UserId == userId?.Id && p.Id == postId).ToList();
+
+    // Error handling for if the either the id or postId is 0 or null and if id or postId doesn't exist
+    if (postId == 0 || id == 0 || id != userId?.Id || !posts.Any(p => p.Id == postId))
+    {
+        return id != userId?.Id ? Results.BadRequest() : Results.NotFound();
+    }
+
+    return Results.Ok(usersPost);
 });
 
 app.Run();
