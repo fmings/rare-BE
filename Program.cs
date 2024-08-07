@@ -186,7 +186,6 @@ List<Comments> comments = new List<Comments>()
     }
 };
 
-<<<<<<< HEAD
 List<Users> users = new List<Users>()
 {
     new Users()
@@ -280,7 +279,6 @@ List<Subscriptions> subscriptions = new List<Subscriptions>()
     }
 };
 
-=======
 List<PostTags> postTags = new List<PostTags>()
 {
     new PostTags()
@@ -314,7 +312,6 @@ List<PostTags> postTags = new List<PostTags>()
         TagId = 1
     }
 };
->>>>>>> main
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
