@@ -34,7 +34,7 @@ new Tags()
 
 List<Categories> categories = new List<Categories>
 {
-    new Categories()
+new Categories()
     {
         Id = 1,
         Label = "Comedy"
@@ -63,35 +63,35 @@ new Categories()
 
 List<PostReactions> postReactions = new List<PostReactions>
 {
-    PostReactions()
+new PostReactions()
     {
         Id = 1,
         ReactionId = 1,
         UserId = 5,
         PostId = 3,
     },
-     PostReactions()
+new PostReactions()
     {
         Id = 2,
         ReactionId = 2,
         UserId = 3,
         PostId = 4,
     },
-     PostReactions()
+new PostReactions()
     {
         Id = 3,
         ReactionId = 3,
         UserId = 2,
         PostId = 2,
     },
-     PostReactions()
+new PostReactions()
     {
         Id = 4,
         ReactionId = 4,
         UserId = 1,
         PostId = 1,
     },
-     PostReactions()
+new PostReactions()
     {
         Id = 5,
         ReactionId = 5,
