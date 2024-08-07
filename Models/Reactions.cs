@@ -9,6 +9,6 @@ namespace rare_BE.Models
     public class Reactions
     {
         public int Id { get; set; }
-        public Boolean Emoji { get; set; }
+        public bool Emoji { get; set; }
     }
 }
