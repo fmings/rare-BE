@@ -159,6 +159,17 @@ List<Posts> posts = new List<Posts>()
         Content = "Hello Lola, stop pooping on the bed",
         Approved = false
     },
+    new Posts()
+    {
+        Id = 6,
+        UserId = 1,
+        CategoryId = 1,
+        Title = "Hello World 2",
+        PublicationDate = new DateTime(2024, 8, 3),
+        ImageUrl = "https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/61f35a8548933c4ce4cc0daa/1643338381475/HelloLight_Mac.png?format=1500w",
+        Content = "Hello World2, how are you today?",
+        Approved = true
+    },
 };
 
 
@@ -276,5 +287,14 @@ app.MapGet("/users/{id}/", (int id) =>
     return post == null ? Results.NotFound() : Results.Ok(post);
 });
 
+// GET Posts by Category
+app.MapGet("/categories/{id}/posts", (int id) =>
+{
+    Categories categoriesId = categories.FirstOrDefault(c => c.Id == id);
+
+    List<Posts> categoryPosts = posts.Where(p => p.CategoryId == categoriesId.Id).ToList();
+    return categoryPosts;
+
+});
 
 app.Run();
