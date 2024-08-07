@@ -243,9 +243,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Where APIs should begin
+// GET All Posts
 app.MapGet("/posts", () =>
 {
+    posts.ForEach(p => p.Category = categories.FirstOrDefault(c => c.Id == p.CategoryId));
+    // posts.ForEach(p => p.User = users.FirstOrDefault(u => u.Id == p.CategoryId));
     return posts;
 });
 
@@ -262,6 +264,16 @@ app.MapPut("/posts/{id}", (int id, Posts post) =>
     }
     posts[postIndex] = post;
     return Results.Ok();
+});
+
+// GET Post Details
+app.MapGet("/users/{id}/", (int id) =>
+{
+    Posts post = posts.FirstOrDefault(p => p.Id == id);
+    post.Category = categories.FirstOrDefault(c => c.Id == post.CategoryId);
+    //post.User = users.FirstOrDefault(u => u.Id == post.UserId);
+
+    return post == null ? Results.NotFound() : Results.Ok(post);
 });
 
 
