@@ -505,7 +505,7 @@ app.MapGet("/categories", () =>
     return categories;
 });
 
-// Post Post Reactions
+// Post Reactions
  app.MapPost("/reactions", (Reactions reaction) =>
 {
    reaction.Id = reactions.Max(pr => pr.Id) + 1;
@@ -517,8 +517,9 @@ app.MapGet("/categories", () =>
  app.MapPost("/users", (Users user) =>
  {
     user.Id = users.Max(u => u.Id) + 1;
-  users.Add(user);
-   return user;
+    user.DateCompleted = DateTime.Today;
+    users.Add(user);
+    return user;
 });
 
 //Delete Post Reactions
