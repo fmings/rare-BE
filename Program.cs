@@ -470,4 +470,13 @@ app.MapGet("/tags", () =>
 {
     return tags;
 });
+
+// POST Tags
+app.MapPost("/tags", (Tags newTag) =>
+{
+    newTag.Id = tags.Max(t => t.Id) + 1;
+    tags.Add(newTag);
+    return Results.Created($"/tags/{newTag.Id}", newTag);
+});
+
 app.Run();
