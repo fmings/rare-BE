@@ -159,8 +159,18 @@ List<Posts> posts = new List<Posts>()
         Content = "Hello Lola, stop pooping on the bed",
         Approved = false
     },
+    new Posts()
+    {
+        Id = 6,
+        UserId = 1,
+        CategoryId = 1,
+        Title = "Hello World 2",
+        PublicationDate = new DateTime(2024, 8, 3),
+        ImageUrl = "https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/61f35a8548933c4ce4cc0daa/1643338381475/HelloLight_Mac.png?format=1500w",
+        Content = "Hello World2, how are you today?",
+        Approved = true
+    },
 };
-
 
 List<Comments> comments = new List<Comments>()
 {
@@ -187,6 +197,162 @@ List<Comments> comments = new List<Comments>()
     }
 };
 
+List<Users> users = new List<Users>()
+{
+    new Users()
+    {
+        Id = 1,
+        FirstName = "Britnay",
+        LastName = "Gore",
+        Email = "britnayg@gmail.com",
+        Bio = "The Island Gyal",
+        Username = "brit268",
+        Password = "Glue2Yu",
+        CreatedOn = new DateTime(2022, 10, 6),
+    },
+    new Users()
+    {
+        Id = 2,
+        FirstName = "Felicia",
+        LastName = "Mings",
+        Email = "feliciam@gmail.com",
+        Bio = "Team Vibes",
+        Username = "felicia808",
+        Password = "CatB3dPoop",
+        CreatedOn = new DateTime(2023, 5, 9),
+    },
+    new Users()
+    {
+        Id = 3,
+        FirstName = "Fletcher",
+        LastName = "Moore",
+        Email = "fletcherm@gmail.com",
+        Bio = "The Young Manager",
+        Username = "fletch777",
+        Password = "Sl1ckRic",
+        CreatedOn = new DateTime(2023, 12, 12),
+    },
+    new Users()
+    {
+        Id = 4,
+        FirstName = "Zach",
+        LastName = "Colbrn",
+        Email = "zachm@gmail.com",
+        Bio = "The Alcohol King",
+        Username = "zach329",
+        Password = "Teki11ya",
+        CreatedOn = new DateTime(2022, 1, 30),
+    },
+    new Users()
+    {
+        Id = 5,
+        FirstName = "Odi",
+        LastName = "Joseph",
+        Email = "odij@gmail.com",
+        Bio = "Backend Genius",
+        Username = "odi904",
+        Password = "Fr0King",
+        CreatedOn = new DateTime(2024, 4, 13),
+    },
+};
+
+List<Subscriptions> subscriptions = new List<Subscriptions>()
+{
+    new Subscriptions()
+    {
+        Id = 1,
+        FollowerId = 5,
+        AuthorId = 3,
+    },
+    new Subscriptions()
+    {
+        Id = 2,
+        FollowerId = 4,
+        AuthorId = 1,
+    },
+    new Subscriptions()
+    {
+        Id = 3,
+        FollowerId = 2,
+        AuthorId = 4,
+    },
+    new Subscriptions()
+    {
+        Id = 4,
+        FollowerId = 1,
+        AuthorId = 2,
+    },
+    new Subscriptions()
+    {
+        Id = 5,
+        FollowerId = 3,
+        AuthorId = 5,
+    }
+};
+
+List<PostTags> postTags = new List<PostTags>()
+{
+    new PostTags()
+    {
+        Id = 1,
+        PostId = 1,
+        TagId = 2
+    },
+     new PostTags()
+    {
+        Id = 2,
+        PostId = 2,
+        TagId = 3
+    },
+      new PostTags()
+    {
+        Id = 3,
+        PostId = 3,
+        TagId = 4
+    },
+       new PostTags()
+    {
+        Id = 4,
+        PostId = 4,
+        TagId = 5
+    },
+        new PostTags()
+    {
+        Id = 5,
+        PostId = 4,
+        TagId = 1
+    }
+};
+
+List<Reactions> reactions = new List<Reactions>()
+{
+    new Reactions()
+    {
+        Id = 1,
+        Emoji = true
+    },
+    new Reactions()
+    {
+        Id = 2,
+        Emoji = false
+    },
+    new Reactions()
+    {
+        Id = 3,
+        Emoji = true
+    },
+    new Reactions()
+    {
+        Id = 4,
+        Emoji = false
+    },
+    new Reactions()
+    {
+        Id = 5,
+        Emoji = true
+    },
+};
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -209,6 +375,72 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// GET All Posts
+app.MapGet("/posts", () =>
+{
+    posts.ForEach(p => p.Category = categories.FirstOrDefault(c => c.Id == p.CategoryId));
+    posts.ForEach(p => p.User = users.FirstOrDefault(u => u.Id == p.CategoryId));
+    return posts;
+});
+
+// PUT Post
+app.MapPut("/posts/{id}", (int id, Posts post) =>
+{
+    Posts postToUpdate = posts.FirstOrDefault(p => p.Id == id);
+
+    int postIndex = posts.IndexOf(postToUpdate);
+    if (postToUpdate == null || id != post.Id)
+    {
+        // If the id is not the id in post data, it returns bad request (400) but if it could not find an post with the id given, it returns not found (404)
+        return id != post.Id ? Results.BadRequest() : Results.NotFound();
+    }
+    posts[postIndex] = post;
+    return Results.Ok();
+});
+
+// GET Post Details
+app.MapGet("/posts/{id}", (int id) =>
+{
+    Posts post = posts.FirstOrDefault(p => p.Id == id);
+    post.Category = categories.FirstOrDefault(c => c.Id == post.CategoryId);
+    post.User = users.FirstOrDefault(u => u.Id == post.UserId);
+
+    return post == null ? Results.NotFound() : Results.Ok(post);
+});
+
+// GET Posts by Category
+app.MapGet("/categories/{id}/posts", (int id) =>
+{
+    Categories? categoriesId = categories.FirstOrDefault(c => c.Id == id);
+
+    List<Posts> categoryPosts = posts.Where(p => p.CategoryId == categoriesId?.Id).ToList();
+
+    if (categoriesId == null || categoriesId?.Id == null || id != categoriesId.Id)
+    {
+        return id != categoriesId?.Id ? Results.BadRequest() : Results.NotFound();
+    }
+    return Results.Ok(categoryPosts);
+
+});
+
+// GET Posts by Author/User
+app.MapGet("/users/{id}/posts/{postId}", (int id, int postId) =>
+{
+    Users? userId = users.FirstOrDefault(p => p.Id == id);
+
+    List<Posts> usersPost = posts.Where(p => p.UserId == userId?.Id && p.Id == postId).ToList();
+
+    usersPost.ForEach(uP => uP.Category = categories.FirstOrDefault(c => c.Id == uP.CategoryId));
+
+    // Error handling for if the either the id or postId is 0 or null and if id or postId doesn't exist
+    if (postId == 0 || id == 0 || id != userId?.Id || !posts.Any(p => p.Id == postId))
+    {
+        return id != userId?.Id ? Results.BadRequest() : Results.NotFound();
+    }
+
+    return Results.Ok(usersPost);
+});
 
 // GET ALL COMMENTS FOR A SPECIFIC USER POST
 app.MapGet("/post/{id}/comments", (int id) =>
@@ -264,6 +496,5 @@ app.MapGet("/categories", () =>
 {
     return categories;
 });
-
 
 app.Run();

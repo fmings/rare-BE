@@ -10,5 +10,6 @@ namespace rare_BE.Models
     {
         public int Id { get; set; }
         public string Label {  get; set; }
+        public Posts Posts { get; set; }
     }
 }
