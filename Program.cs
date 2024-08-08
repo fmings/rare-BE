@@ -517,7 +517,7 @@ app.MapGet("/categories", () =>
  app.MapPost("/users", (Users user) =>
  {
     user.Id = users.Max(u => u.Id) + 1;
-    user.DateCompleted = DateTime.Today;
+    user.CreatedOn = DateTime.Today;
     users.Add(user);
     return user;
 });
