@@ -263,30 +263,35 @@ List<Subscriptions> subscriptions = new List<Subscriptions>()
         Id = 1,
         FollowerId = 5,
         AuthorId = 3,
+        CreatedOn = new DateTime(2023, 11, 22),
     },
     new Subscriptions()
     {
         Id = 2,
         FollowerId = 4,
         AuthorId = 1,
+        CreatedOn = new DateTime(2022, 9, 16),
     },
     new Subscriptions()
     {
         Id = 3,
         FollowerId = 2,
         AuthorId = 4,
+        CreatedOn = new DateTime(2024, 1, 30),
     },
     new Subscriptions()
     {
         Id = 4,
         FollowerId = 1,
         AuthorId = 2,
+        CreatedOn = new DateTime(2022, 5, 5),
     },
     new Subscriptions()
     {
         Id = 5,
         FollowerId = 3,
         AuthorId = 5,
+        CreatedOn = new DateTime(2024, 7, 16),
     }
 };
 
@@ -442,6 +447,34 @@ app.MapGet("/users/{id}/posts/{postId}", (int id, int postId) =>
     return Results.Ok(usersPost);
 });
 
+// GET Subscriptions
+app.MapGet("/subscriptions", () =>
+{
+    return subscriptions;
+});
+
+// POST Subscriptions
+app.MapPost("/subscriptions", (Subscriptions subscription) =>
+{
+    if (subscription.FollowerId == subscription.AuthorId)
+        return Results.BadRequest("You cannnot subscribe to yourself");
+
+    if (!users.Any(u => u.Id == subscription.AuthorId) || !users.Any(u => u.Id == subscription.FollowerId))
+        return Results.BadRequest("One or both users do not exist");
+
+    subscription.Id = subscriptions.Max(st => st.Id) + 1;
+    subscription.CreatedOn = DateTime.Today;
+    subscriptions.Add(subscription);
+    return Results.Ok(subscription);
+});
+
+// DELETE Subscriptions
+app.MapDelete("/subscriptions/{id}", (int id) =>
+{
+    Subscriptions subscriptionId = subscriptions.FirstOrDefault(s => s.Id == id);
+    subscriptions.Remove(subscriptionId);
+});
+
 // Post PostReactions
 app.MapPost("/postreactions", (PostReactions postReaction) =>
 {
@@ -506,7 +539,7 @@ app.MapGet("/categories", () =>
 });
 
 // Post Reactions
- app.MapPost("/reactions", (Reactions reaction) =>
+app.MapPost("/reactions", (Reactions reaction) =>
 {
    reaction.Id = reactions.Max(pr => pr.Id) + 1;
    reactions.Add(reaction);
@@ -528,7 +561,7 @@ app.MapGet("/categories", () =>
     PostReactions? postReaction = postReactions.FirstOrDefault(pr => pr.Id == id);
     int index = postReactions.IndexOf(postReaction);
     postReactions.RemoveAt(index);
-});
+ });
 
 // DELETE PostTags by Id
 app.MapDelete("/posttags/{id}", (int id) =>
