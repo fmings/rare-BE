@@ -465,4 +465,9 @@ app.MapPost("/posttags", (PostTags postTag) =>
     return Results.Created($"/posttags/{postTag.Id}", postTag);
 });
 
+// GET ALl Tags
+app.MapGet("/tags", () =>
+{
+    return tags;
+});
 app.Run();
