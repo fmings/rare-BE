@@ -479,4 +479,17 @@ app.MapPost("/tags", (Tags newTag) =>
     return Results.Created($"/tags/{newTag.Id}", newTag);
 });
 
+//DELETE Post
+app.MapDelete("/posts/{id}", (int id) =>
+{
+    var postToRemove = posts.FirstOrDefault(p => p.Id == id);
+    if (postToRemove == null)
+    {
+        return Results.NotFound();
+    }
+
+    posts.Remove(postToRemove); 
+    return Results.NoContent(); 
+});
+
 app.Run();
