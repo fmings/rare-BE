@@ -468,4 +468,10 @@ app.MapPost("/subscriptions", (Subscriptions subscription) =>
     return Results.Ok(subscription);
 });
 
+app.MapDelete("/subscriptions/{id}", (int id) =>
+{
+    Subscriptions subscriptionId = subscriptions.FirstOrDefault(s => s.Id == id);
+    subscriptions.Remove(subscriptionId);
+});
+
 app.Run();
