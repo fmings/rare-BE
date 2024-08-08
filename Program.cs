@@ -159,6 +159,17 @@ List<Posts> posts = new List<Posts>()
         Content = "Hello Lola, stop pooping on the bed",
         Approved = false
     },
+    new Posts()
+    {
+        Id = 6,
+        UserId = 1,
+        CategoryId = 1,
+        Title = "Hello World 2",
+        PublicationDate = new DateTime(2024, 8, 3),
+        ImageUrl = "https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/61f35a8548933c4ce4cc0daa/1643338381475/HelloLight_Mac.png?format=1500w",
+        Content = "Hello World2, how are you today?",
+        Approved = true
+    },
 };
 
 List<Comments> comments = new List<Comments>()
@@ -341,6 +352,7 @@ List<Reactions> reactions = new List<Reactions>()
         Emoji = true
     },
 };
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -364,7 +376,73 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Where APIs should begin
+// GET All Posts
+app.MapGet("/posts", () =>
+{
+    posts.ForEach(p => p.Category = categories.FirstOrDefault(c => c.Id == p.CategoryId));
+    posts.ForEach(p => p.User = users.FirstOrDefault(u => u.Id == p.CategoryId));
+    return posts;
+});
+
+// PUT Post
+app.MapPut("/posts/{id}", (int id, Posts post) =>
+{
+    Posts postToUpdate = posts.FirstOrDefault(p => p.Id == id);
+
+    int postIndex = posts.IndexOf(postToUpdate);
+    if (postToUpdate == null || id != post.Id)
+    {
+        // If the id is not the id in post data, it returns bad request (400) but if it could not find an post with the id given, it returns not found (404)
+        return id != post.Id ? Results.BadRequest() : Results.NotFound();
+    }
+    posts[postIndex] = post;
+    return Results.Ok();
+});
+
+// GET Post Details
+app.MapGet("/posts/{id}", (int id) =>
+{
+    Posts post = posts.FirstOrDefault(p => p.Id == id);
+    post.Category = categories.FirstOrDefault(c => c.Id == post.CategoryId);
+    post.User = users.FirstOrDefault(u => u.Id == post.UserId);
+
+    return post == null ? Results.NotFound() : Results.Ok(post);
+});
+
+// GET Posts by Category
+app.MapGet("/categories/{id}/posts", (int id) =>
+{
+    Categories? categoriesId = categories.FirstOrDefault(c => c.Id == id);
+
+    List<Posts> categoryPosts = posts.Where(p => p.CategoryId == categoriesId?.Id).ToList();
+
+    if (categoriesId == null || categoriesId?.Id == null || id != categoriesId.Id)
+    {
+        return id != categoriesId?.Id ? Results.BadRequest() : Results.NotFound();
+    }
+    return Results.Ok(categoryPosts);
+
+});
+
+// GET Posts by Author/User
+app.MapGet("/users/{id}/posts/{postId}", (int id, int postId) =>
+{
+    Users? userId = users.FirstOrDefault(p => p.Id == id);
+
+    List<Posts> usersPost = posts.Where(p => p.UserId == userId?.Id && p.Id == postId).ToList();
+
+    usersPost.ForEach(uP => uP.Category = categories.FirstOrDefault(c => c.Id == uP.CategoryId));
+
+    // Error handling for if the either the id or postId is 0 or null and if id or postId doesn't exist
+    if (postId == 0 || id == 0 || id != userId?.Id || !posts.Any(p => p.Id == postId))
+    {
+        return id != userId?.Id ? Results.BadRequest() : Results.NotFound();
+    }
+
+    return Results.Ok(usersPost);
+});
+
+// DELETE PostTags by Id
 app.MapDelete("/posttags/{id}", (int id) =>
 {
     var postTag = postTags.FirstOrDefault(pt => pt.Id == id);
@@ -374,6 +452,17 @@ app.MapDelete("/posttags/{id}", (int id) =>
     }
     postTags.Remove(postTag);
     return Results.NoContent();
-
 });
+
+// POST Post Tags 
+app.MapPost("/posttags", (PostTags postTag) =>
+{
+    if (postTag == null)
+    {
+        return Results.BadRequest("Invalid PostTag object");
+    }
+    postTags.Add(postTag);
+    return Results.Created($"/posttags/{postTag.Id}", postTag);
+});
+
 app.Run();
