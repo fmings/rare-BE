@@ -468,10 +468,99 @@ app.MapPost("/subscriptions", (Subscriptions subscription) =>
     return Results.Ok(subscription);
 });
 
+// DELETE Subscriptions
 app.MapDelete("/subscriptions/{id}", (int id) =>
 {
     Subscriptions subscriptionId = subscriptions.FirstOrDefault(s => s.Id == id);
     subscriptions.Remove(subscriptionId);
 });
+
+// Post PostReactions
+app.MapPost("/postreactions", (PostReactions postReaction) =>
+{
+    postReaction.Id = postReactions.Max(st => st.Id) + 1;
+    postReactions.Add(postReaction);
+    return postReaction;
+});
+
+// GET ALL COMMENTS FOR A SPECIFIC USER POST
+app.MapGet("/post/{id}/comments", (int id) =>
+{
+    List<Comments> postComments = comments.Where(c => c.PostId == id).ToList();
+    return postComments;
+
+});
+
+// POST A COMMENT ON A SPECIFIC POST
+app.MapPost("/post/{id}/comments", (int id, Comments newComment) =>
+{
+    newComment.Id = comments.Max(c => c.Id) + 1;
+    comments.Add(newComment);
+    return newComment;
+});
+
+
+// EDIT/UPDATE A COMMENT ON A POST
+app.MapPatch("/post/{postId}/comment/{commentId}", (int commentId, Comments updatedComment) =>
+{
+    Comments commentToUpdate = comments.FirstOrDefault(c => c.Id == commentId);
+    if (commentToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+
+    commentToUpdate.Content = updatedComment.Content;
+
+    return Results.Ok(commentToUpdate);
+
+});
+
+// DELETE A COMMENT ON A POST
+app.MapDelete("/post/{postId}/comment/{commentId}", (int postId, int commentId) =>
+{
+    Comments comment = comments.FirstOrDefault(c => c.Id == commentId);
+    comments.Remove(comment);
+    return Results.NoContent();
+});
+
+
+// CREATE(POST) A NEW CATEGORY
+app.MapPost("/categories", (Categories newCategory) =>
+{
+    newCategory.Id = categories.Max(c => c.Id) + 1;
+    categories.Add(newCategory);
+    return newCategory;
+});
+
+// GET ALL CATEGORIES
+app.MapGet("/categories", () =>
+{
+    return categories;
+});
+
+// Post Reactions
+app.MapPost("/reactions", (Reactions reaction) =>
+{
+   reaction.Id = reactions.Max(pr => pr.Id) + 1;
+   reactions.Add(reaction);
+    return reaction;
+});
+
+// Post Users
+ app.MapPost("/users", (Users user) =>
+ {
+    user.Id = users.Max(u => u.Id) + 1;
+    user.CreatedOn = DateTime.Today;
+    users.Add(user);
+    return user;
+});
+
+//Delete Post Reactions
+ app.MapDelete("/postreactions/{id}", (int id) =>
+ {
+    PostReactions? postReaction = postReactions.FirstOrDefault(pr => pr.Id == id);
+    int index = postReactions.IndexOf(postReaction);
+    postReactions.RemoveAt(index);
+ });
 
 app.Run();
