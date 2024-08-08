@@ -530,7 +530,6 @@ app.MapGet("/categories", () =>
     postReactions.RemoveAt(index);
 });
 
-app.Run();
 // DELETE PostTags by Id
 app.MapDelete("/posttags/{id}", (int id) =>
 {
