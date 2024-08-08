@@ -18,4 +18,5 @@ public class Users
     public string? ProfileImageUrl { get; set; }
     public DateTime CreatedOn { get; set; }
     public bool Active { get; set; }
+    public Posts Posts { get; set; }
 }

@@ -17,7 +17,7 @@ namespace rare_BE.Models
         public string? ImageUrl { get; set; }
         public string? Content { get; set; }
         public bool Approved { get; set; }
-
-
+        public Categories Category { get; set; }
+        public Users User { get; set; }
     }
 }
