@@ -506,24 +506,24 @@ app.MapGet("/categories", () =>
 });
 
 // Post Post Reactions
- app.MapPost("/postreactions", (PostReactions postReaction) =>
+ app.MapPost("/reactions", (Reactions reaction) =>
 {
-   postReaction.Id = postReactions.Max(pr => pr.Id) + 1;
-   postReactions.Add(postReaction);
-    return postReaction;
+   reaction.Id = reactions.Max(pr => pr.Id) + 1;
+   reactions.Add(reaction);
+    return reaction;
 });
 
 // Post Users
-app.MapPost("/users", (Users user) =>
-{
+ app.MapPost("/users", (Users user) =>
+ {
     user.Id = users.Max(u => u.Id) + 1;
   users.Add(user);
    return user;
 });
 
 //Delete Post Reactions
-app.MapDelete("/postreactions/{id}", (int id) =>
-{
+ app.MapDelete("/postreactions/{id}", (int id) =>
+ {
     PostReactions? postReaction = postReactions.FirstOrDefault(pr => pr.Id == id);
     int index = postReactions.IndexOf(postReaction);
     postReactions.RemoveAt(index);
