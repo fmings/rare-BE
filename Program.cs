@@ -365,8 +365,14 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Where APIs should begin
-app.MapGet("/test", () =>
+app.MapDelete("/posttags/{id}", (int id) =>
 {
-    return "sugar";
+    var postTag = postTags.FirstOrDefault(pt => pt.Id == id);
+    if (postTag == null)
+    {
+        return Results.NotFound();
+    }
+    postTags.Remove(postTag);
+    return Results.NoContent();
+
 });
-app.Run();
