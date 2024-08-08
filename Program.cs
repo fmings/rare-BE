@@ -461,6 +461,7 @@ app.MapPost("/posttags", (PostTags postTag) =>
     {
         return Results.BadRequest("Invalid PostTag object");
     }
+    postTag.Id = tags.Max(t => t.Id) + 1;
     postTags.Add(postTag);
     return Results.Created($"/posttags/{postTag.Id}", postTag);
 });
@@ -495,21 +496,9 @@ app.MapDelete("/posts/{id}", (int id) =>
 // POST Post
 app.MapPost("/posts", (Posts newPost) =>
 {
-    newPost.Id = posts.Max(p => p.Id) + 1;
-
-    var category = categories.FirstOrDefault(c => c.Id == newPost.CategoryId);
-    var user = users.FirstOrDefault(u => u.Id == newPost.UserId);
-
-    if (category == null || user == null)
-    {
-        return Results.BadRequest("Invalid CategoryId or UserId"); 
-    }
-
-    newPost.Category = category;
-    newPost.User = user;
+    newPost.Id = posts.Max(post => post.Id) + 1;
     posts.Add(newPost);
-
-    return Results.Created($"/posts/{newPost.Id}", newPost);
+    return newPost;
 });
 
 app.Run();
