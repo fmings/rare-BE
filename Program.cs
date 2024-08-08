@@ -450,21 +450,6 @@ app.MapPost("/postreactions", (PostReactions postReaction) =>
     return postReaction;
 });
 
-app.MapGet("/reactions", () =>
-{
-    return reactions;
-});
-
-app.MapGet("/users", () =>
-{
-    return users;
-});
-
-app.MapGet("/postreactions", () =>
-{
-    return postReactions;
-});
-
 // GET ALL COMMENTS FOR A SPECIFIC USER POST
 app.MapGet("/post/{id}/comments", (int id) =>
 {
@@ -520,30 +505,23 @@ app.MapGet("/categories", () =>
     return categories;
 });
 
-//Post Post Reactions
-app.MapPost("/postreactions", (PostReactions postReaction) =>
+// Post Post Reactions
+ app.MapPost("/postreactions", (PostReactions postReaction) =>
 {
-    postReaction.Id = postReactions.Max(pr => pr.Id) + 1;
-    postReactions.Add(postReaction);
+   postReaction.Id = postReactions.Max(pr => pr.Id) + 1;
+   postReactions.Add(postReaction);
     return postReaction;
 });
 
-//Post Reactions
-app.MapPost("/reactions", (Reactions reaction) =>
-{
-    reaction.Id = reactions.Max(r => r.Id) + 1;
-    reactions.Add(reaction);
-    return reaction;
-});
-
-//Post Users
+// Post Users
 app.MapPost("/users", (Users user) =>
 {
     user.Id = users.Max(u => u.Id) + 1;
-    users.Add(user);
-    return user;
+  users.Add(user);
+   return user;
 });
 
+//Delete Post Reactions
 app.MapDelete("/postreactions/{id}", (int id) =>
 {
     PostReactions? postReaction = postReactions.FirstOrDefault(pr => pr.Id == id);
