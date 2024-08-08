@@ -492,4 +492,24 @@ app.MapDelete("/posts/{id}", (int id) =>
     return Results.NoContent(); 
 });
 
+// POST Post
+app.MapPost("/posts", (Posts newPost) =>
+{
+    newPost.Id = posts.Max(p => p.Id) + 1;
+
+    var category = categories.FirstOrDefault(c => c.Id == newPost.CategoryId);
+    var user = users.FirstOrDefault(u => u.Id == newPost.UserId);
+
+    if (category == null || user == null)
+    {
+        return Results.BadRequest("Invalid CategoryId or UserId"); 
+    }
+
+    newPost.Category = category;
+    newPost.User = user;
+    posts.Add(newPost);
+
+    return Results.Created($"/posts/{newPost.Id}", newPost);
+});
+
 app.Run();
