@@ -563,4 +563,63 @@ app.MapPost("/reactions", (Reactions reaction) =>
     postReactions.RemoveAt(index);
  });
 
+// DELETE PostTags by Id
+app.MapDelete("/posttags/{id}", (int id) =>
+{
+    var postTag = postTags.FirstOrDefault(pt => pt.Id == id);
+    if (postTag == null)
+    {
+        return Results.NotFound();
+    }
+    postTags.Remove(postTag);
+    return Results.NoContent();
+});
+
+// POST Post Tags 
+app.MapPost("/posttags", (PostTags postTag) =>
+{
+    if (postTag == null)
+    {
+        return Results.BadRequest("Invalid PostTag object");
+    }
+    postTag.Id = tags.Max(t => t.Id) + 1;
+    postTags.Add(postTag);
+    return Results.Created($"/posttags/{postTag.Id}", postTag);
+});
+
+// GET ALl Tags
+app.MapGet("/tags", () =>
+{
+    return tags;
+});
+
+// POST Tags
+app.MapPost("/tags", (Tags newTag) =>
+{
+    newTag.Id = tags.Max(t => t.Id) + 1;
+    tags.Add(newTag);
+    return Results.Created($"/tags/{newTag.Id}", newTag);
+});
+
+//DELETE Post
+app.MapDelete("/posts/{id}", (int id) =>
+{
+    var postToRemove = posts.FirstOrDefault(p => p.Id == id);
+    if (postToRemove == null)
+    {
+        return Results.NotFound();
+    }
+
+    posts.Remove(postToRemove); 
+    return Results.NoContent(); 
+});
+
+// POST Post
+app.MapPost("/posts", (Posts newPost) =>
+{
+    newPost.Id = posts.Max(post => post.Id) + 1;
+    posts.Add(newPost);
+    return newPost;
+});
+
 app.Run();
