@@ -376,3 +376,4 @@ app.MapDelete("/posttags/{id}", (int id) =>
     return Results.NoContent();
 
 });
+app.Run();
