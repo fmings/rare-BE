@@ -442,4 +442,59 @@ app.MapGet("/users/{id}/posts/{postId}", (int id, int postId) =>
     return Results.Ok(usersPost);
 });
 
+// GET ALL COMMENTS FOR A SPECIFIC USER POST
+app.MapGet("/post/{id}/comments", (int id) =>
+{
+    List<Comments> postComments = comments.Where(c => c.PostId == id).ToList();
+    return postComments;
+
+});
+
+// POST A COMMENT ON A SPECIFIC POST
+app.MapPost("/post/{id}/comments", (int id, Comments newComment) =>
+{
+    newComment.Id = comments.Max(c => c.Id) + 1;
+    comments.Add(newComment);
+    return newComment;
+});
+
+
+// EDIT/UPDATE A COMMENT ON A POST
+app.MapPatch("/post/{postId}/comment/{commentId}", (int commentId, Comments updatedComment) =>
+{
+    Comments commentToUpdate = comments.FirstOrDefault(c => c.Id == commentId);
+    if (commentToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+
+    commentToUpdate.Content = updatedComment.Content;
+
+    return Results.Ok(commentToUpdate);
+
+});
+
+// DELETE A COMMENT ON A POST
+app.MapDelete("/post/{postId}/comment/{commentId}", (int postId, int commentId) =>
+{
+    Comments comment = comments.FirstOrDefault(c => c.Id == commentId);
+    comments.Remove(comment);
+    return Results.NoContent();
+});
+
+
+// CREATE(POST) A NEW CATEGORY
+app.MapPost("/categories", (Categories newCategory) =>
+{
+    newCategory.Id = categories.Max(c => c.Id) + 1;
+    categories.Add(newCategory);
+    return newCategory;
+});
+
+// GET ALL CATEGORIES
+app.MapGet("/categories", () =>
+{
+    return categories;
+});
+
 app.Run();
