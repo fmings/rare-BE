@@ -603,6 +603,14 @@ app.MapGet("/tags", () =>
     return tags;
 });
 
+// GET ALL TAGS FOR A SPECIFIC USER POST
+app.MapGet("/post/{id}/tag", (int id) =>
+{
+    List<PostTags> tagsOfPost = postTags.Where(t => t.PostId == id).ToList();
+    return tagsOfPost;
+
+});
+
 // POST Tags
 app.MapPost("/tags", (Tags newTag) =>
 {
