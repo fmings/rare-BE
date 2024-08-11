@@ -640,4 +640,21 @@ app.MapPost("/posts", (Posts newPost) =>
     return newPost;
 });
 
+// Get User By Id (Single User) 
+app.MapGet("/users/{id}", (int id) =>
+{
+    var user = users.FirstOrDefault(u => u.Id == id);
+    if (user == null)
+    {
+        return Results.NotFound($"User with ID {id} not found.");
+    }
+    return Results.Ok(user);
+});
+
+// GET All Users
+app.MapGet("/users", () =>
+{
+    return Results.Ok(users);
+});
+
 app.Run();
