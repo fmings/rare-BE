@@ -395,7 +395,7 @@ app.UseHttpsRedirection();
 app.MapGet("/posts", () =>
 {
     posts.ForEach(p => p.Category = categories.FirstOrDefault(c => c.Id == p.CategoryId));
-    posts.ForEach(p => p.User = users.FirstOrDefault(u => u.Id == p.CategoryId));
+    posts.ForEach(p => p.User = users.FirstOrDefault(u => u.Id == p.UserId));
     return posts;
 });
 
